@@ -3,7 +3,6 @@ package zhao.siqi.com.androidvideoplayer;
 import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.SurfaceHolder;
 import android.view.View;
@@ -32,21 +31,16 @@ public class VideoViewActivity extends AppCompatActivity {
 
         // 隐藏标题栏
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-
         // 设置横屏
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
         //设置全屏
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_video_view);
 
         ButterKnife.bind(this);
 
         vv = (VideoView) findViewById(R.id.vv);
-
-        final File file = new File(Environment.getExternalStorageDirectory().getPath(), "Movies/test.mp4");
+        final File file = new File("/storage/emulated/0/Movies/Starry_Night.mp4");
 
         // 创建一个MediaController。
         // 这里的Context一定要传入this，不能用getApplicationContext().否则一点击屏幕就闪退
@@ -120,7 +114,6 @@ public class VideoViewActivity extends AppCompatActivity {
         });
 
     }
-
 
     //当Activity退出界面(无论Activity是否销毁了)，记录当前视频播放进度
     @Override
