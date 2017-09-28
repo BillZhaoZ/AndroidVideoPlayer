@@ -17,6 +17,9 @@ import java.io.File;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * videoview 实现播放效果
+ */
 public class VideoViewActivity extends AppCompatActivity {
 
     @BindView(R.id.vv)
@@ -127,8 +130,4 @@ public class VideoViewActivity extends AppCompatActivity {
         super.onPause();
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
 }
