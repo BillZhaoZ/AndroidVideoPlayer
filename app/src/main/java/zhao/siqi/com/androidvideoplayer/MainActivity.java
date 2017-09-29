@@ -45,4 +45,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    // vitamio
+    @OnClick(R.id.lv_list)
+    public void jumpToVitamio() {
+
+        Intent intent = new Intent(this, VitamioActivity.class);
+        startActivity(intent);
+    }
 }
