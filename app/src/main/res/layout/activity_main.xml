@@ -41,4 +41,15 @@
         android:text="Vitamio"
         android:textColor="@android:color/background_light"/>
 
+    <TextView
+        android:id="@+id/tv_bilibili"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@color/colorAccent"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="Bilibili"
+        android:textColor="@android:color/background_light"/>
+
 </LinearLayout>

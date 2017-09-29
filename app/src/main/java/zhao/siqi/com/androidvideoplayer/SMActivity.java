@@ -5,12 +5,17 @@ import android.os.Bundle;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * SurfaceView + MediaPlayer
  */
 public class SMActivity extends BaseActivity {
 
-    private SurfaceView sv;
+    @BindView(R.id.sv)
+    SurfaceView sv;
+
     private MediaPlayer player;
     private static int currentPositon;
 
@@ -18,12 +23,12 @@ public class SMActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sm);
+        ButterKnife.bind(this);
 
         sv = (SurfaceView) findViewById(R.id.sv);
 
         // 拿到SurfaceView的控制器
         final SurfaceHolder sh = sv.getHolder();
-
 
         /**
          * 设置SurfaceView的回调。 SurfaceView是个重量级组件，只要不可见就不会创建该组件。

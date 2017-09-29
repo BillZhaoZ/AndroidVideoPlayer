@@ -20,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
     TextView mTvSm;
     @BindView(R.id.lv_list)
     TextView mLvList;
+    @BindView(R.id.tv_bilibili)
+    TextView mBili;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,14 @@ public class MainActivity extends AppCompatActivity {
     public void jumpToVitamio() {
 
         Intent intent = new Intent(this, VitamioActivity.class);
+        startActivity(intent);
+    }
+
+    // Bilibili
+    @OnClick(R.id.tv_bilibili)
+    public void jumpToBili() {
+
+        Intent intent = new Intent(this, BiliBliActivity.class);
         startActivity(intent);
     }
 }
