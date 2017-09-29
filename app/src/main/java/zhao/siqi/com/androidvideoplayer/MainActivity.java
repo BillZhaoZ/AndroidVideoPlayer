@@ -9,6 +9,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+/**
+ * 主页
+ */
 public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.tv_vv)
@@ -34,5 +37,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    // 跳转到surfaceView
+    @OnClick(R.id.tv_sm)
+    public void jumpToSM() {
+
+        Intent intent = new Intent(this, SMActivity.class);
+        startActivity(intent);
+    }
 
 }

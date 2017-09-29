@@ -1,13 +1,9 @@
 package zhao.siqi.com.androidvideoplayer;
 
-import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.SurfaceHolder;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.MediaController;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -20,7 +16,7 @@ import butterknife.ButterKnife;
 /**
  * videoview 实现播放效果
  */
-public class VideoViewActivity extends AppCompatActivity {
+public class VideoViewActivity extends BaseActivity {
 
     @BindView(R.id.vv)
     VideoView vv;
@@ -31,13 +27,6 @@ public class VideoViewActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // 隐藏标题栏
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        // 设置横屏
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        //设置全屏
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_video_view);
 
         ButterKnife.bind(this);
