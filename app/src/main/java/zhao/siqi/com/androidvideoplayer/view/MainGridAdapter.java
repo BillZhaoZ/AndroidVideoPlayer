@@ -11,8 +11,6 @@ import android.widget.TextView;
 import zhao.siqi.com.androidvideoplayer.R;
 
 /**
- * 随访--科室随访工具--gridview
- *
  * @author Bill
  */
 public class MainGridAdapter extends BaseAdapter {

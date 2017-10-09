@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.widget.VideoView;
 
 /**
+ * 全屏的videoview
  * Created by Bill on 2017/10/9.
  */
 

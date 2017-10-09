@@ -1,6 +1,7 @@
 package zhao.siqi.com.androidvideoplayer.view;
 
 /**
+ * 播放地址
  * Created by Bill on 2017/10/9.
  */
 

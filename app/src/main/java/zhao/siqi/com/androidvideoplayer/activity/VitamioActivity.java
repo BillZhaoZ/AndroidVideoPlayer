@@ -27,8 +27,6 @@ public class VitamioActivity extends BaseActivity {
     @BindView(R.id.net_speed)
     TextView netSpeedTv;
 
-    private int mVideoLayout = 0;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
