@@ -1,5 +1,11 @@
 # AndroidVideoPlayer
 
+    本项目，简单的实现和集成了Android系统下常见的视频播放器；
+    包括：videoview
+         Surfaceview
+         Vitamio集成使用
+         Bilibili框架集成
+    
     1.VideoView 实现播放效果 
     
          vv = (VideoView) findViewById(R.id.vv);
@@ -182,5 +188,73 @@
             }
     
     3.Vitamio 第三方框架
-    
+         //检查vitamio框架是否可用
+               /* if (!LibsChecker.checkVitamioLibs(this)) {
+                    return;
+                }*/
+        
+                setContentView(R.layout.activity_vitamio);
+                ButterKnife.bind(this);
+        
+                //显示缓冲百分比的TextView
+                percentTv = (TextView) findViewById(R.id.buffer_percent);
+                //显示下载网速的TextView
+                netSpeedTv = (TextView) findViewById(R.id.net_speed);
+        
+                //初始化加载库文件
+                if (Vitamio.isInitialized(this)) {
+                    videoView = (VideoView) findViewById(R.id.vitamio);
+                    videoView.setVideoURI(Uri.parse(url1));
+                    videoView.setVideoQuality(MediaPlayer.VIDEOQUALITY_HIGH);
+        
+                    MediaController controller = new MediaController(this);
+                    videoView.setMediaController(controller);
+                    videoView.setBufferSize(10240); //设置视频缓冲大小。默认1024KB，单位byte
+                    videoView.requestFocus();
+        
+                    videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared(MediaPlayer mediaPlayer) {
+                            // optional need Vitamio 4.0
+                            mediaPlayer.setPlaybackSpeed(1.0f);
+                            //mediaPlayer.setLooping(true);
+                        }
+                    });
+        
+                    videoView.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
+                        @Override
+                        public void onBufferingUpdate(MediaPlayer mp, int percent) {
+                            percentTv.setText("已缓冲：" + percent + "%");
+                        }
+        
+                    });
+        
+                    videoView.setOnInfoListener(new MediaPlayer.OnInfoListener() {
+                        @Override
+                        public boolean onInfo(MediaPlayer mp, int what, int extra) {
+                            switch (what) {
+                                //开始缓冲
+                                case MediaPlayer.MEDIA_INFO_BUFFERING_START:
+                                    percentTv.setVisibility(View.VISIBLE);
+                                    netSpeedTv.setVisibility(View.VISIBLE);
+                                    mp.pause();
+                                    break;
+                                //缓冲结束
+                                case MediaPlayer.MEDIA_INFO_BUFFERING_END:
+                                    percentTv.setVisibility(View.GONE);
+                                    netSpeedTv.setVisibility(View.GONE);
+                                    mp.start(); //缓冲结束再播放
+                                    break;
+                                //正在缓冲
+                                case MediaPlayer.MEDIA_INFO_DOWNLOAD_RATE_CHANGED:
+                                    netSpeedTv.setText("当前网速:" + extra + "kb/s");
+                                    break;
+                            }
+        
+                            return true;
+                        }
+                    });
+                }
+                
+        
     

@@ -98,11 +98,21 @@ public class VitamioActivity extends BaseActivity {
                             netSpeedTv.setText("当前网速:" + extra + "kb/s");
                             break;
                     }
-                    return true;
 
+                    return true;
                 }
             });
         }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
 }
