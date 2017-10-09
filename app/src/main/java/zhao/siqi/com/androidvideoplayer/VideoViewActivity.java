@@ -32,7 +32,8 @@ public class VideoViewActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         vv = (VideoView) findViewById(R.id.vv);
-        final File file = new File("/storage/emulated/0/Movies/Starry_Night.mp4");
+
+        final File file = new File(VideoAddress.getInstance().localPath);
 
         // 创建一个MediaController。
         // 这里的Context一定要传入this，不能用getApplicationContext().否则一点击屏幕就闪退
@@ -110,6 +111,7 @@ public class VideoViewActivity extends BaseActivity {
     //当Activity退出界面(无论Activity是否销毁了)，记录当前视频播放进度
     @Override
     protected void onPause() {
+
         if (vv.isPlaying()) {
             secondCurrentPosition = vv.getCurrentPosition();
             vv.pause();
@@ -118,5 +120,4 @@ public class VideoViewActivity extends BaseActivity {
 
         super.onPause();
     }
-
 }

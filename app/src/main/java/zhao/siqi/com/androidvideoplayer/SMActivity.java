@@ -22,6 +22,7 @@ public class SMActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_sm);
         ButterKnife.bind(this);
 
@@ -69,7 +70,7 @@ public class SMActivity extends BaseActivity {
                     try {
                         // 设置需要加载的资源.加载网络资源需要异步准备，加载本地资源可以同步准备
                         // player.setDataSource("http://222.20.39.47:8080/AllResourceWeb/s2.3gp");
-                        player.setDataSource("/storage/emulated/0/Movies/Starry_Night.mp4");
+                        player.setDataSource(VideoAddress.getInstance().url2);
 
                         // 指定视频播放的组件。如果没有设置，视频是无法播放的
                         player.setDisplay(sh);

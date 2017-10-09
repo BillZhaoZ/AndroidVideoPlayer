@@ -26,12 +26,6 @@ public class VitamioActivity extends BaseActivity {
 
     private int mVideoLayout = 0;
 
-    private String url1 = "http://112.253.22.157/17/z/z/y/u/zzyuasjwufnqerzvyxgkuigrkcatxr/hc.yinyuetai.com/D046015255134077DDB3ACA0D7E68D45.flv";
-    private String url2 = "http://flashmedia.eastday.com/newdate/news/2016-11/shznews1125-19.mp4";
-    private String url3 = "rtsp://184.72.239.149/vod/mp4:BigBuckBunny_115k.mov";
-    private String url4 = "http://42.96.249.166/live/388.m3u8";
-    private String url5 = "http://live.3gv.ifeng.com/zixun.m3u8";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +47,7 @@ public class VitamioActivity extends BaseActivity {
         //初始化加载库文件
         if (Vitamio.isInitialized(this)) {
             videoView = (VideoView) findViewById(R.id.vitamio);
-            videoView.setVideoURI(Uri.parse(url2));
+            videoView.setVideoURI(Uri.parse(VideoAddress.getInstance().url1));
             videoView.setVideoQuality(MediaPlayer.VIDEOQUALITY_HIGH);
 
             MediaController controller = new MediaController(this);
