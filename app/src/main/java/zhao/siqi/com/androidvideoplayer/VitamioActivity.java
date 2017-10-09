@@ -36,7 +36,7 @@ public class VitamioActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //检查vitamio框架是否可用
+        //检查vitamio框架是否可用   还需要验证
        /* if (!LibsChecker.checkVitamioLibs(this)) {
             return;
         }*/
@@ -46,13 +46,14 @@ public class VitamioActivity extends BaseActivity {
 
         //显示缓冲百分比的TextView
         percentTv = (TextView) findViewById(R.id.buffer_percent);
+
         //显示下载网速的TextView
         netSpeedTv = (TextView) findViewById(R.id.net_speed);
 
         //初始化加载库文件
         if (Vitamio.isInitialized(this)) {
             videoView = (VideoView) findViewById(R.id.vitamio);
-            videoView.setVideoURI(Uri.parse(url1));
+            videoView.setVideoURI(Uri.parse(url2));
             videoView.setVideoQuality(MediaPlayer.VIDEOQUALITY_HIGH);
 
             MediaController controller = new MediaController(this);
@@ -63,7 +64,6 @@ public class VitamioActivity extends BaseActivity {
             videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mediaPlayer) {
-                    // optional need Vitamio 4.0
                     mediaPlayer.setPlaybackSpeed(1.0f);
                     //mediaPlayer.setLooping(true);
                 }
@@ -80,6 +80,7 @@ public class VitamioActivity extends BaseActivity {
             videoView.setOnInfoListener(new MediaPlayer.OnInfoListener() {
                 @Override
                 public boolean onInfo(MediaPlayer mp, int what, int extra) {
+
                     switch (what) {
                         //开始缓冲
                         case MediaPlayer.MEDIA_INFO_BUFFERING_START:
@@ -87,12 +88,14 @@ public class VitamioActivity extends BaseActivity {
                             netSpeedTv.setVisibility(View.VISIBLE);
                             mp.pause();
                             break;
+
                         //缓冲结束
                         case MediaPlayer.MEDIA_INFO_BUFFERING_END:
                             percentTv.setVisibility(View.GONE);
                             netSpeedTv.setVisibility(View.GONE);
                             mp.start(); //缓冲结束再播放
                             break;
+
                         //正在缓冲
                         case MediaPlayer.MEDIA_INFO_DOWNLOAD_RATE_CHANGED:
                             netSpeedTv.setText("当前网速:" + extra + "kb/s");
@@ -103,11 +106,6 @@ public class VitamioActivity extends BaseActivity {
                 }
             });
         }
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
     }
 
     @Override

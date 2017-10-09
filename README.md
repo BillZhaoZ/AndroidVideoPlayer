@@ -1,10 +1,10 @@
 # AndroidVideoPlayer
 
     本项目，简单的实现和集成了Android系统下常见的视频播放器；
-    包括：videoview
-         Surfaceview
-         Vitamio集成使用
-         Bilibili框架集成
+       包括：videoview
+            Surfaceview
+            Vitamio集成使用
+            Bilibili框架集成
     
     1.VideoView 实现播放效果 
     

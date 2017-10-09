@@ -8,48 +8,16 @@
     tools:context="zhao.siqi.com.androidvideoplayer.MainActivity">
 
 
-    <TextView
-        android:id="@+id/tv_vv"
+    <zhao.siqi.com.androidvideoplayer.NoScroolGridView
+        android:id="@+id/grid_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="@color/colorAccent"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="VideoView"
-        android:textColor="@android:color/background_light"/>
-
-    <TextView
-        android:id="@+id/tv_sm"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="@color/colorAccent"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="SurfaceView MediaPlayer"
-        android:textColor="@android:color/background_light"/>
-
-    <TextView
-        android:id="@+id/lv_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="@color/colorAccent"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="Vitamio"
-        android:textColor="@android:color/background_light"/>
-
-    <TextView
-        android:id="@+id/tv_bilibili"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="@color/colorAccent"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="Bilibili"
-        android:textColor="@android:color/background_light"/>
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:horizontalSpacing="1dp"
+        android:listSelector="@color/white"
+        android:numColumns="2"
+        android:paddingTop="10dp"
+        android:scrollbars="none"
+        android:verticalSpacing="1dp"/>
 
 </LinearLayout>
