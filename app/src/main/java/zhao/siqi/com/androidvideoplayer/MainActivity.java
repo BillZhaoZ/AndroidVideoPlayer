@@ -7,6 +7,12 @@ import android.view.View;
 import android.widget.AdapterView;
 
 import butterknife.ButterKnife;
+import zhao.siqi.com.androidvideoplayer.activity.BiliBliActivity;
+import zhao.siqi.com.androidvideoplayer.activity.SMActivity;
+import zhao.siqi.com.androidvideoplayer.activity.VideoViewActivity;
+import zhao.siqi.com.androidvideoplayer.activity.VitamioActivity;
+import zhao.siqi.com.androidvideoplayer.view.MainGridAdapter;
+import zhao.siqi.com.androidvideoplayer.view.NoScroolGridView;
 
 /**
  * 主页

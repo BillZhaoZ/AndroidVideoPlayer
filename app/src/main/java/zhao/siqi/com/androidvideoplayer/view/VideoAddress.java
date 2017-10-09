@@ -1,4 +1,4 @@
-package zhao.siqi.com.androidvideoplayer;
+package zhao.siqi.com.androidvideoplayer.view;
 
 /**
  * Created by Bill on 2017/10/9.

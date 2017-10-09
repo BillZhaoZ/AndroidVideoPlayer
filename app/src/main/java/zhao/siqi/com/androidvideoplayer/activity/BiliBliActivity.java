@@ -1,7 +1,9 @@
-package zhao.siqi.com.androidvideoplayer;
+package zhao.siqi.com.androidvideoplayer.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import zhao.siqi.com.androidvideoplayer.R;
 
 /**
  * 集成bili

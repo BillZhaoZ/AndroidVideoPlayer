@@ -1,4 +1,4 @@
-package zhao.siqi.com.androidvideoplayer;
+package zhao.siqi.com.androidvideoplayer.view;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import zhao.siqi.com.androidvideoplayer.R;
 
 /**
  * 随访--科室随访工具--gridview

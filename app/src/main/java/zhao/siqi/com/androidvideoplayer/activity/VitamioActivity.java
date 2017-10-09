@@ -1,4 +1,4 @@
-package zhao.siqi.com.androidvideoplayer;
+package zhao.siqi.com.androidvideoplayer.activity;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,6 +11,9 @@ import io.vov.vitamio.MediaPlayer;
 import io.vov.vitamio.Vitamio;
 import io.vov.vitamio.widget.MediaController;
 import io.vov.vitamio.widget.VideoView;
+import zhao.siqi.com.androidvideoplayer.BaseActivity;
+import zhao.siqi.com.androidvideoplayer.R;
+import zhao.siqi.com.androidvideoplayer.view.VideoAddress;
 
 /**
  * Vitamio集成

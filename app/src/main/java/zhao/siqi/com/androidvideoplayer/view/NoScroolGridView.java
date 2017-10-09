@@ -1,4 +1,4 @@
-package zhao.siqi.com.androidvideoplayer;
+package zhao.siqi.com.androidvideoplayer.view;
 
 import android.content.Context;
 import android.util.AttributeSet;

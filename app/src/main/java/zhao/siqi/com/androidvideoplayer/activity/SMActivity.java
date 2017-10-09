@@ -1,4 +1,4 @@
-package zhao.siqi.com.androidvideoplayer;
+package zhao.siqi.com.androidvideoplayer.activity;
 
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -7,9 +7,14 @@ import android.view.SurfaceView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import zhao.siqi.com.androidvideoplayer.BaseActivity;
+import zhao.siqi.com.androidvideoplayer.R;
+import zhao.siqi.com.androidvideoplayer.view.VideoAddress;
 
 /**
  * SurfaceView + MediaPlayer
+ * <p>
+ * 后期需要添加自定义控制栏
  */
 public class SMActivity extends BaseActivity {
 

@@ -26,19 +26,19 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".VideoViewActivity">
+        <activity android:name=".activity.VideoViewActivity">
         </activity>
 
-        <activity android:name=".SMActivity">
+        <activity android:name=".activity.SMActivity">
         </activity>
 
         <activity android:name=".BaseActivity">
         </activity>
 
-        <activity android:name=".VitamioActivity">
+        <activity android:name=".activity.VitamioActivity">
         </activity>
 
-        <activity android:name=".BiliBliActivity">
+        <activity android:name=".activity.BiliBliActivity">
         </activity>
 
         <activity

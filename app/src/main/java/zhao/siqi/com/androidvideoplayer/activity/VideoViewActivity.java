@@ -1,4 +1,4 @@
-package zhao.siqi.com.androidvideoplayer;
+package zhao.siqi.com.androidvideoplayer.activity;
 
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -6,12 +6,15 @@ import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.MediaController;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import zhao.siqi.com.androidvideoplayer.BaseActivity;
+import zhao.siqi.com.androidvideoplayer.R;
+import zhao.siqi.com.androidvideoplayer.view.VideoAddress;
+import zhao.siqi.com.androidvideoplayer.view.FullScreenVideoView;
 
 /**
  * videoview 实现播放效果
@@ -19,7 +22,7 @@ import butterknife.ButterKnife;
 public class VideoViewActivity extends BaseActivity {
 
     @BindView(R.id.vv)
-    VideoView vv;
+    FullScreenVideoView vv;
 
     private MediaController mc;
     private static int secondCurrentPosition;
@@ -27,11 +30,9 @@ public class VideoViewActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_video_view);
-
         ButterKnife.bind(this);
-
-        vv = (VideoView) findViewById(R.id.vv);
 
         final File file = new File(VideoAddress.getInstance().localPath);
 
@@ -56,6 +57,8 @@ public class VideoViewActivity extends BaseActivity {
 
                     // 设置VideoView获取焦点
                     vv.requestFocus();
+
+
 
                     // 将背景图片设为透明
                     // vv.getBackground().setAlpha(0);
