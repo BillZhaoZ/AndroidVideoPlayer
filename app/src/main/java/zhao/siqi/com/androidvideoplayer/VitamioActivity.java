@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.vov.vitamio.LibsChecker;
 import io.vov.vitamio.MediaPlayer;
 import io.vov.vitamio.Vitamio;
 import io.vov.vitamio.widget.MediaController;
@@ -38,9 +37,9 @@ public class VitamioActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         //检查vitamio框架是否可用
-        if (!LibsChecker.checkVitamioLibs(this)) {
+       /* if (!LibsChecker.checkVitamioLibs(this)) {
             return;
-        }
+        }*/
 
         setContentView(R.layout.activity_vitamio);
         ButterKnife.bind(this);
@@ -53,7 +52,7 @@ public class VitamioActivity extends BaseActivity {
         //初始化加载库文件
         if (Vitamio.isInitialized(this)) {
             videoView = (VideoView) findViewById(R.id.vitamio);
-            videoView.setVideoURI(Uri.parse("/storage/emulated/0/Movies/Starry_Night.mp4"));
+            videoView.setVideoURI(Uri.parse(url1));
             videoView.setVideoQuality(MediaPlayer.VIDEOQUALITY_HIGH);
 
             MediaController controller = new MediaController(this);
