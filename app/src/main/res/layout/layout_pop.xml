@@ -13,7 +13,7 @@
     <ImageView
         android:id="@+id/imageView_play"
         android:layout_width="0dp"
-        android:layout_height="30dp"
+        android:layout_height="25dp"
         android:layout_weight="1"
         android:src="@drawable/icon_direct_p"/>
 

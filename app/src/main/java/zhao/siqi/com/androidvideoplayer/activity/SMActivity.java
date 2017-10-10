@@ -21,14 +21,15 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import butterknife.ButterKnife;
 import zhao.siqi.com.androidvideoplayer.R;
+import zhao.siqi.com.androidvideoplayer.Utils;
 import zhao.siqi.com.androidvideoplayer.view.VideoAddress;
+
+import static zhao.siqi.com.androidvideoplayer.Utils.formatTime;
 
 /**
  * SurfaceView + MediaPlayer
@@ -37,19 +38,14 @@ import zhao.siqi.com.androidvideoplayer.view.VideoAddress;
  */
 public class SMActivity extends AppCompatActivity {
 
-    private final static String TAG = "MainActivity";
-    private Context mContext = this;
     private SurfaceView surfaceView = null;
     private SurfaceHolder surfaceHolder = null;
     private MediaPlayer mediaPlayer = null;
     private ImageView imageView_main_show = null;
 
-    // 自定义的控制条及其上的控件
-    private View controllerView;
     private PopupWindow popupWindow;
 
     private ImageView imageView_play;
-    private ImageView imageView_fullscreen;
     private SeekBar seekBar;
     private TextView textView_playTime;
     private TextView textView_duration;
@@ -58,6 +54,11 @@ public class SMActivity extends AppCompatActivity {
     // 自动隐藏自定义播放器控制条的时间
     private static final int HIDDEN_TIME = 5000;
     private float densityRatio = 1.0f; // 密度比值系数（密度比值：一英寸中像素点除以160）
+    private MyVideoBroadcastReceiver receiver = null;
+
+    // 设置定时器
+    private Timer timer = null;
+    private final static int WHAT = 0;
 
     private Runnable r = new Runnable() {
         @Override
@@ -66,12 +67,6 @@ public class SMActivity extends AppCompatActivity {
             showOrHiddenController();
         }
     };
-
-    private MyVideoBroadcastReceiver receiver = null;
-
-    // 设置定时器
-    private Timer timer = null;
-    private final static int WHAT = 0;
 
     Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
@@ -82,12 +77,10 @@ public class SMActivity extends AppCompatActivity {
                         int currentPlayer = mediaPlayer.getCurrentPosition();
                         if (currentPlayer > 0) {
                             mediaPlayer.getCurrentPosition();
-                            textView_playTime.setText(formatTime(currentPlayer));
+                            textView_playTime.setText(Utils.formatTime(currentPlayer));
 
                             // 让seekBar也跟随改变
-                            int progress = (int) ((currentPlayer / (float) mediaPlayer
-                                    .getDuration()) * 100);
-
+                            int progress = (int) ((currentPlayer / (float) mediaPlayer.getDuration()) * 100);
                             seekBar.setProgress(progress);
                         } else {
                             textView_playTime.setText("00:00");
@@ -95,9 +88,6 @@ public class SMActivity extends AppCompatActivity {
                         }
                     }
 
-                    break;
-
-                default:
                     break;
             }
         }
@@ -118,19 +108,15 @@ public class SMActivity extends AppCompatActivity {
 
         // 动态注册广播接受者
         receiver = new MyVideoBroadcastReceiver();
-        registerReceiver(receiver, new IntentFilter("com.amy.day43_03_SurfaceViewMediaPlayer"));
+        registerReceiver(receiver, new IntentFilter("SurfaceViewMediaPlayer"));
     }
 
-    private String formatTime(long time) {
-        SimpleDateFormat formatter = new SimpleDateFormat("mm:ss");
-        return formatter.format(new Date(time));
-    }
-
-
+    /**
+     * 初始化控制器
+     * popwindow
+     */
     private void initController() {
-
-        controllerView = getLayoutInflater().inflate(
-                R.layout.layout_pop, null);
+        View controllerView = getLayoutInflater().inflate(R.layout.layout_pop, null);
 
         // 初始化popopWindow
         popupWindow = new PopupWindow(controllerView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
@@ -191,7 +177,9 @@ public class SMActivity extends AppCompatActivity {
         });
     }
 
-
+    /**
+     * 显示和隐藏控制器
+     */
     private void showOrHiddenController() {
         if (popupWindow.isShowing()) {
             popupWindow.dismiss();
@@ -229,7 +217,6 @@ public class SMActivity extends AppCompatActivity {
         }
 
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-
             @Override
             public void onPrepared(MediaPlayer mp) {
                 // 表示准备完成，设置总的时长，使用时间格式化工具
@@ -251,18 +238,16 @@ public class SMActivity extends AppCompatActivity {
             @Override
             public boolean onError(MediaPlayer mp, int what, int extra) {
                 mp.reset();
-
                 return false;
             }
         });
 
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-
             @Override
             public void onCompletion(MediaPlayer mp) {
                 // 发送广播，播放下一首歌曲
                 Intent intent = new Intent();
-                intent.setAction("com.amy.day43_03_SurfaceViewMediaPlayer");
+                intent.setAction("SurfaceViewMediaPlayer");
                 sendBroadcast(intent);
             }
         });
@@ -362,7 +347,7 @@ public class SMActivity extends AppCompatActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals("com.amy.day43_03_SurfaceViewMediaPlayer")) {
+            if (intent.getAction().equals("SurfaceViewMediaPlayer")) {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setIcon(R.drawable.ic_launcher)

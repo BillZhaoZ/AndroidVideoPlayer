@@ -97,7 +97,7 @@
             }
 
     
-    2.SurfaceView + MediaPlayer
+    2.SurfaceView + MediaPlayer（详情见代码，这里是第一种方法，不带进度条和控制栏的）
         
          vv = (VideoView) findViewById(R.id.vv);
                 final File file = new File("/storage/emulated/0/Movies/Starry_Night.mp4");
