@@ -291,13 +291,11 @@ public class SMActivity extends AppCompatActivity {
         surfaceView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+
                 // 表示在点击的瞬间就显示控制条
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         showOrHiddenController();
-                        break;
-
-                    default:
                         break;
                 }
                 return true;
@@ -311,15 +309,11 @@ public class SMActivity extends AppCompatActivity {
      * @param v
      */
     public void clickButton(View v) {
+
         switch (v.getId()) {
             case R.id.imageView_main_play:
-
                 imageView_main_show.setVisibility(View.GONE);
                 mediaPlayer.start();
-
-                break;
-
-            default:
                 break;
         }
     }
@@ -354,23 +348,22 @@ public class SMActivity extends AppCompatActivity {
                         .setTitle("提示")
                         .setMessage("视屏播放完毕，是否播放")
                         .setNegativeButton("取消", null)
-                        .setPositiveButton("确定",
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        mediaPlayer.reset();
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mediaPlayer.reset();
 
-                                        try {
-                                            mediaPlayer.setDataSource(filePath);
-                                            mediaPlayer.prepare();
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
+                                try {
+                                    mediaPlayer.setDataSource(filePath);
+                                    mediaPlayer.prepare();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
 
-                                        mediaPlayer.setLooping(false);
-                                        mediaPlayer.start();
-                                    }
-                                }).show();
+                                mediaPlayer.setLooping(false);
+                                mediaPlayer.start();
+                            }
+                        }).show();
             }
         }
     }
