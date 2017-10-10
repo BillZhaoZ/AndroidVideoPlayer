@@ -58,8 +58,6 @@ public class VideoViewActivity extends BaseActivity {
                     // 设置VideoView获取焦点
                     vv.requestFocus();
 
-
-
                     // 将背景图片设为透明
                     // vv.getBackground().setAlpha(0);
 

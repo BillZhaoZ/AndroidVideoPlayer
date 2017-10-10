@@ -39,12 +39,6 @@ public class VitamioActivity extends BaseActivity {
         setContentView(R.layout.activity_vitamio);
         ButterKnife.bind(this);
 
-        //显示缓冲百分比的TextView
-        percentTv = (TextView) findViewById(R.id.buffer_percent);
-
-        //显示下载网速的TextView
-        netSpeedTv = (TextView) findViewById(R.id.net_speed);
-
         //初始化加载库文件
         if (Vitamio.isInitialized(this)) {
             videoView = (VideoView) findViewById(R.id.vitamio);

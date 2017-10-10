@@ -1,13 +1,32 @@
 package zhao.siqi.com.androidvideoplayer.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
-import butterknife.BindView;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import butterknife.ButterKnife;
-import zhao.siqi.com.androidvideoplayer.BaseActivity;
 import zhao.siqi.com.androidvideoplayer.R;
 import zhao.siqi.com.androidvideoplayer.view.VideoAddress;
 
@@ -16,13 +35,73 @@ import zhao.siqi.com.androidvideoplayer.view.VideoAddress;
  * <p>
  * 后期需要添加自定义控制栏
  */
-public class SMActivity extends BaseActivity {
+public class SMActivity extends AppCompatActivity {
 
-    @BindView(R.id.sv)
-    SurfaceView sv;
+    private final static String TAG = "MainActivity";
+    private Context mContext = this;
+    private SurfaceView surfaceView = null;
+    private SurfaceHolder surfaceHolder = null;
+    private MediaPlayer mediaPlayer = null;
+    private ImageView imageView_main_show = null;
 
-    private MediaPlayer player;
-    private static int currentPositon;
+    // 自定义的控制条及其上的控件
+    private View controllerView;
+    private PopupWindow popupWindow;
+
+    private ImageView imageView_play;
+    private ImageView imageView_fullscreen;
+    private SeekBar seekBar;
+    private TextView textView_playTime;
+    private TextView textView_duration;
+    private String filePath = null;
+
+    // 自动隐藏自定义播放器控制条的时间
+    private static final int HIDDEN_TIME = 5000;
+    private float densityRatio = 1.0f; // 密度比值系数（密度比值：一英寸中像素点除以160）
+
+    private Runnable r = new Runnable() {
+        @Override
+        public void run() {
+            // 又回到了主线程
+            showOrHiddenController();
+        }
+    };
+
+    private MyVideoBroadcastReceiver receiver = null;
+
+    // 设置定时器
+    private Timer timer = null;
+    private final static int WHAT = 0;
+
+    Handler handler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+
+            switch (msg.what) {
+                case WHAT:
+                    if (mediaPlayer != null) {
+                        int currentPlayer = mediaPlayer.getCurrentPosition();
+                        if (currentPlayer > 0) {
+                            mediaPlayer.getCurrentPosition();
+                            textView_playTime.setText(formatTime(currentPlayer));
+
+                            // 让seekBar也跟随改变
+                            int progress = (int) ((currentPlayer / (float) mediaPlayer
+                                    .getDuration()) * 100);
+
+                            seekBar.setProgress(progress);
+                        } else {
+                            textView_playTime.setText("00:00");
+                            seekBar.setProgress(0);
+                        }
+                    }
+
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,81 +110,284 @@ public class SMActivity extends BaseActivity {
         setContentView(R.layout.activity_sm);
         ButterKnife.bind(this);
 
-        sv = (SurfaceView) findViewById(R.id.sv);
+        initView();
 
-        // 拿到SurfaceView的控制器
-        final SurfaceHolder sh = sv.getHolder();
+        initMediaPlayer();
 
-        /**
-         * 设置SurfaceView的回调。 SurfaceView是个重量级组件，只要不可见就不会创建该组件。
-         * 所以要设置一个侦听，等待SurfaceView组件可见在播放视频，然而SurfaceView是没有侦听的，只要回调。
-         * 一定要注意，别导错了包（import android.view.SurfaceHolder.Callback;）
-         */
-        sh.addCallback(new SurfaceHolder.Callback() {
+        initController();
 
-            // SurfaceView销毁时调用
+        // 动态注册广播接受者
+        receiver = new MyVideoBroadcastReceiver();
+        registerReceiver(receiver, new IntentFilter("com.amy.day43_03_SurfaceViewMediaPlayer"));
+    }
+
+    private String formatTime(long time) {
+        SimpleDateFormat formatter = new SimpleDateFormat("mm:ss");
+        return formatter.format(new Date(time));
+    }
+
+
+    private void initController() {
+
+        controllerView = getLayoutInflater().inflate(
+                R.layout.layout_pop, null);
+
+        // 初始化popopWindow
+        popupWindow = new PopupWindow(controllerView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+
+        imageView_play = (ImageView) controllerView.findViewById(R.id.imageView_play);
+        seekBar = (SeekBar) controllerView.findViewById(R.id.seekbar);
+        textView_playTime = (TextView) controllerView.findViewById(R.id.textView_playtime);
+        textView_duration = (TextView) controllerView.findViewById(R.id.textView_totaltime);
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            // 表示手指拖动seekbar完毕，手指离开屏幕会触发以下方法
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // 让计时器延时执行
+                handler.postDelayed(r, HIDDEN_TIME);
+
+
+            }
+
+            // 在手指正在拖动seekBar，而手指未离开屏幕触发的方法
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // 让计时器取消计时
+                handler.removeCallbacks(r);
+            }
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress,
+                                          boolean fromUser) {
+                if (fromUser) {
+                    int playtime = progress * mediaPlayer.getDuration() / 100;
+                    mediaPlayer.seekTo(playtime);
+                }
+
+            }
+        });
+
+
+        // 点击播放的时候,判断是播放还是暂停
+        imageView_play.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (imageView_main_show.getVisibility() == View.VISIBLE) {
+                    imageView_main_show.setVisibility(View.GONE);
+                }
+
+                if (mediaPlayer.isPlaying()) {
+                    mediaPlayer.pause();
+                    imageView_play.setImageResource(R.drawable.icon_direct_p);
+                } else {
+                    mediaPlayer.start();
+                    imageView_play.setImageResource(R.drawable.icon_direct_n);
+                }
+
+            }
+        });
+    }
+
+
+    private void showOrHiddenController() {
+        if (popupWindow.isShowing()) {
+            popupWindow.dismiss();
+        } else {
+            // 将dp转换为px
+            int controllerHeightPixel = (int) (densityRatio * 50);
+            popupWindow.showAsDropDown(surfaceView, 0, -controllerHeightPixel);
+            // 延时执行
+            handler.postDelayed(r, HIDDEN_TIME);
+        }
+    }
+
+    /**
+     * 初始化mediaPlayer
+     */
+    private void initMediaPlayer() {
+        // 视频文件路径
+        filePath = VideoAddress.getInstance().localPath;
+
+        if (mediaPlayer == null) {
+            // 1,创建MediaPlay对象
+            mediaPlayer = new MediaPlayer();
+            mediaPlayer.reset();
+
+            try {
+                mediaPlayer.setDataSource(filePath);
+                mediaPlayer.prepare();
+                // mediaPlayer.start();
+                mediaPlayer.setLooping(false);
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                // 表示准备完成，设置总的时长，使用时间格式化工具
+                // String duration = mediaPlayer.getDuration() ;
+                textView_duration.setText(formatTime(mediaPlayer.getDuration()));
+
+                // 初始化定时器
+                timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        handler.sendEmptyMessage(WHAT);
+                    }
+                }, 0, 1000);
+            }
+        });
+
+        mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mp, int what, int extra) {
+                mp.reset();
+
+                return false;
+            }
+        });
+
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                // 发送广播，播放下一首歌曲
+                Intent intent = new Intent();
+                intent.setAction("com.amy.day43_03_SurfaceViewMediaPlayer");
+                sendBroadcast(intent);
+            }
+        });
+    }
+
+    /**
+     * 初始化布局
+     */
+    private void initView() {
+        densityRatio = getResources().getDisplayMetrics().density; // 表示获取真正的密度
+
+        imageView_main_show = (ImageView) findViewById(R.id.imageView_main_play);
+        surfaceView = (SurfaceView) findViewById(R.id.surfaceView_main);
+        surfaceHolder = surfaceView.getHolder();
+
+        surfaceHolder.addCallback(new SurfaceHolder.Callback() {
+
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
-                // 每次SurfaceView销毁时，同时停止播放视频
-                if (player != null) {
-
-                    // currentPositon如果是静态变量，则该变量与进程同存亡。所以不论是home还是返回键，只要进程不死，该变量就存在
-                    // currentPositon如果不是静态变量，仅仅是个全局变量，则该变量与Activity共存亡。即home建该变量存在；若返回键该变量死亡，视频从头播放。
-                    currentPositon = player.getCurrentPosition();
-
-                    player.stop();
-                    player.release();
-                    player = null;
+                if (mediaPlayer != null) {
+                    mediaPlayer.stop();
+                    mediaPlayer.release();
                 }
             }
 
-            // SurfaceView创建时调用
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
-
-                // SurfaceView一旦不可见就会销毁。所以每次进入播放界面，就会创建一个SurfaceView.每次推出播放界面，就会销毁SurfaceView,但是MediaPlayer不会销毁，需要手动代码销毁
-                // 所以，要判断一下MediaPlayer的对象是不是空，是空就创建一个播放视频，不是空就什么也不做，继续播放前面的视频
-                if (player == null) {
-                    // 创建MediaPlayer对象
-                    player = new MediaPlayer();
-
-                    // 重置
-                    player.reset();
-
-                    try {
-                        // 设置需要加载的资源.加载网络资源需要异步准备，加载本地资源可以同步准备
-                        // player.setDataSource("http://222.20.39.47:8080/AllResourceWeb/s2.3gp");
-                        player.setDataSource(VideoAddress.getInstance().url2);
-
-                        // 指定视频播放的组件。如果没有设置，视频是无法播放的
-                        player.setDisplay(sh);
-
-                        // 异步准备.如果是本地视频，可以直接同步准备后就播放，不需要设置监听
-                        player.prepareAsync();
-
-                        // 设置侦听，用来判断当前子线程是否加载资源完毕
-                        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-
-                            @Override
-                            public void onPrepared(MediaPlayer mp) {
-                                player.start();
-
-                                // 寻找到上次播放的位置，继续播放
-                                player.seekTo(currentPositon);
-                            }
-                        });
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                if (mediaPlayer != null) {
+                    mediaPlayer.setDisplay(surfaceHolder);
+                    // mediaPlayer.start() ;
                 }
             }
 
-            // SurfaceView结构改变时调用
             @Override
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 
             }
         });
+
+        // 设置屏幕的触摸监听
+        surfaceView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // 表示在点击的瞬间就显示控制条
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        showOrHiddenController();
+                        break;
+
+                    default:
+                        break;
+                }
+                return true;
+            }
+        });
     }
+
+    /**
+     * 设置控件的监听事件
+     *
+     * @param v
+     */
+    public void clickButton(View v) {
+        switch (v.getId()) {
+            case R.id.imageView_main_play:
+
+                imageView_main_show.setVisibility(View.GONE);
+                mediaPlayer.start();
+
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // 解绑广播
+        unregisterReceiver(receiver);
+        timer.cancel();
+
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+
+        handler.removeCallbacksAndMessages(null);
+    }
+
+    /**
+     * 广播接收器
+     */
+    class MyVideoBroadcastReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals("com.amy.day43_03_SurfaceViewMediaPlayer")) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setIcon(R.drawable.ic_launcher)
+                        .setTitle("提示")
+                        .setMessage("视屏播放完毕，是否播放")
+                        .setNegativeButton("取消", null)
+                        .setPositiveButton("确定",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        mediaPlayer.reset();
+
+                                        try {
+                                            mediaPlayer.setDataSource(filePath);
+                                            mediaPlayer.prepare();
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+
+                                        mediaPlayer.setLooping(false);
+                                        mediaPlayer.start();
+                                    }
+                                }).show();
+            }
+        }
+    }
+
 }
