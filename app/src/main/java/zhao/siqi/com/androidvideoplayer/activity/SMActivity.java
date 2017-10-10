@@ -133,8 +133,6 @@ public class SMActivity extends AppCompatActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 // 让计时器延时执行
                 handler.postDelayed(r, HIDDEN_TIME);
-
-
             }
 
             // 在手指正在拖动seekBar，而手指未离开屏幕触发的方法
@@ -145,20 +143,16 @@ public class SMActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress,
-                                          boolean fromUser) {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
                     int playtime = progress * mediaPlayer.getDuration() / 100;
                     mediaPlayer.seekTo(playtime);
                 }
-
             }
         });
 
-
         // 点击播放的时候,判断是播放还是暂停
         imageView_play.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 if (imageView_main_show.getVisibility() == View.VISIBLE) {
@@ -185,7 +179,7 @@ public class SMActivity extends AppCompatActivity {
             popupWindow.dismiss();
         } else {
             // 将dp转换为px
-            int controllerHeightPixel = (int) (densityRatio * 50);
+            int controllerHeightPixel = (int) (densityRatio * 40);
             popupWindow.showAsDropDown(surfaceView, 0, -controllerHeightPixel);
             // 延时执行
             handler.postDelayed(r, HIDDEN_TIME);
