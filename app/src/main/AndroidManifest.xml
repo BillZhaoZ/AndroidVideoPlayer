@@ -40,7 +40,10 @@
         <activity android:name=".activity.VitamioActivity">
         </activity>
 
-        <activity android:name=".activity.BiliBliActivity">
+        <activity
+            android:name=".activity.BiliBliActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait">
         </activity>
 
         <activity
