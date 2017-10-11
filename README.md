@@ -188,7 +188,7 @@
             }
     
     3.Vitamio 第三方框架
-         //检查vitamio框架是否可用
+               //检查vitamio框架是否可用
                /* if (!LibsChecker.checkVitamioLibs(this)) {
                     return;
                 }*/
@@ -257,9 +257,9 @@
                 }
                 
         
-    4.Bilibili播放器
+    4.Bilibili的ijk播放器集成
                
-            /**
+           /**
             * 初始化播放器
             *
             * @param videoList
@@ -288,6 +288,7 @@
                        .startPlay();
            }
        
+       
            /**
             * 初始化视频资源
             *
@@ -314,7 +315,7 @@
            }
            
        
-       生命周期方法设置
+        //生命周期方法设置
            @Override
            protected void onPause() {
                super.onPause();
