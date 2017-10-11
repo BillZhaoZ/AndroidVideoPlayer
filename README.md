@@ -257,4 +257,104 @@
                 }
                 
         
-    
+    4.Bilibili播放器
+               
+            /**
+            * 初始化播放器
+            *
+            * @param videoList
+            */
+           private void intiPlayer(List<VideoijkBean> videoList) {
+               player = new PlayerView(this)
+                       .setTitle("电影名称：我不知道啊")
+                       .setScaleType(PlayStateParams.fitparent)
+                       .setShowSpeed(true)
+                       .hideMenu(false)
+                       .forbidTouch(false)
+                       .showThumbnail(new OnShowThumbnailListener() {
+                           @Override
+                           public void onShowThumbnail(ImageView ivThumbnail) {
+                               // 缩略图显示
+                               Glide.with(mContext)
+                                       .load("http://pic2.nipic.com/20090413/406638_125424003_2.jpg")
+                                       .placeholder(R.mipmap.ic_launcher)
+                                       .error(R.color.collect_color)
+                                       .into(ivThumbnail);
+                           }
+                       })
+       
+                       //.setPlaySource(VideoAddress.getInstance().urlBili)  // 单个视频
+                       .setPlaySource(videoList) // 多个分辨率  同一个视频资源
+                       .startPlay();
+           }
+       
+           /**
+            * 初始化视频资源
+            *
+            * @return
+            */
+           @NonNull
+           private List<VideoijkBean> initRes() {
+               List<VideoijkBean> videoList = new ArrayList<>();
+       
+               String url1 = VideoAddress.getInstance().urlBili1;
+               String url2 = VideoAddress.getInstance().urlBili2;
+       
+               VideoijkBean m1 = new VideoijkBean();
+               m1.setStream("标清");
+               m1.setUrl(url1);
+       
+               VideoijkBean m2 = new VideoijkBean();
+               m2.setStream("高清");
+               m2.setUrl(url2);
+       
+               videoList.add(m1);
+               videoList.add(m2);
+               return videoList;
+           }
+           
+       
+       生命周期方法设置
+           @Override
+           protected void onPause() {
+               super.onPause();
+       
+               if (player != null) {
+                   player.onPause();
+               }
+           }
+       
+           @Override
+           protected void onResume() {
+               super.onResume();
+               if (player != null) {
+                   player.onResume();
+               }
+           }
+       
+           @Override
+           protected void onDestroy() {
+               super.onDestroy();
+       
+               if (player != null) {
+                   player.onDestroy();
+               }
+           }
+       
+           @Override
+           public void onConfigurationChanged(Configuration newConfig) {
+               super.onConfigurationChanged(newConfig);
+       
+               if (player != null) {
+                   player.onConfigurationChanged(newConfig);
+               }
+           }
+       
+           @Override
+           public void onBackPressed() {
+               if (player != null && player.onBackPressed()) {
+                   return;
+               }
+               super.onBackPressed();
+           }         
+               

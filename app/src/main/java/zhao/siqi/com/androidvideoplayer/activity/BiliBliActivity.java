@@ -57,6 +57,7 @@ public class BiliBliActivity extends AppCompatActivity {
         player = new PlayerView(this)
                 .setTitle("电影名称：我不知道啊")
                 .setScaleType(PlayStateParams.fitparent)
+                .setShowSpeed(true)
                 .hideMenu(false)
                 .forbidTouch(false)
                 .showThumbnail(new OnShowThumbnailListener() {
