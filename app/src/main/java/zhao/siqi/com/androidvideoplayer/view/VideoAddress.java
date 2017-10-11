@@ -26,6 +26,8 @@ public class VideoAddress {
     public String url4 = "http://42.96.249.166/live/388.m3u8";
     public String url5 = "http://live.3gv.ifeng.com/zixun.m3u8";
 
+    public String urlBili1 = "http://9890.vod.myqcloud.com/9890_9c1fa3e2aea011e59fc841df10c92278.f20.mp4";
+    public String urlBili2 = "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f30.mp4";
 
     public String localPath = "/storage/emulated/0/Movies/Starry_Night.mp4"; // 手机本地视频路径
 }

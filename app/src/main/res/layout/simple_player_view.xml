@@ -7,6 +7,6 @@
     <include
         layout="@layout/simple_player_view_player"
         android:layout_width="match_parent"
-        android:layout_height="380dp"/>
+        android:layout_height="180dp"/>
 
 </RelativeLayout>
