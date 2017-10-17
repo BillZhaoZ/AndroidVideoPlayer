@@ -35,6 +35,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     apt 'com.jakewharton:butterknife-compiler:8.5.1'
 
+    // 封装过的ijk播放器
     compile 'com.dou361.ijkplayer:jjdxm-ijkplayer:1.0.5'
 
     // required, enough for most devices.
